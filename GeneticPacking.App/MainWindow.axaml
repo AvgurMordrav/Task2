@@ -1,0 +1,72 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GeneticPacking.App.MainWindow"
+        Title="Двумерная упаковка" Width="1180" Height="980" MinWidth="950" MinHeight="700">
+    <Grid ColumnDefinitions="350,*" Margin="15" ColumnSpacing="15">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="12">
+            <TextBlock Text="Параметры упаковки" FontSize="21"/>
+            <StackPanel Name="InputPanel" Spacing="8">
+                <ComboBox Name="ScenarioBox" SelectedIndex="0" SelectionChanged="Scenario_Changed">
+                    <ComboBoxItem Content="Свои параметры"/>
+                    <ComboBoxItem Content="Тест 1: 8 0 0 5 0 0 4"/>
+                    <ComboBoxItem Content="Тест 2: 12 0 0 9 0 0 4"/>
+                    <ComboBoxItem Content="Тест 3: 59 2 2 50 2 3 30"/>
+                </ComboBox>
+                <TextBlock Name="ScenarioText" TextWrapping="Wrap" FontSize="11"/>
+                <TextBlock Text="Режим выполнения"/>
+                <ComboBox Name="ModeBox" SelectedIndex="1" HorizontalAlignment="Stretch">
+                    <ComboBoxItem Content="Последовательный"/>
+                    <ComboBoxItem Content="Параллельный"/>
+                    <ComboBoxItem Content="Оба: сравнить время"/>
+                    <ComboBoxItem Content="Распределённый"/>
+                </ComboBox>
+                <TextBlock Text="Адреса сервисов (каждый с новой строки)"/>
+                <TextBox Name="ServicesBox" AcceptsReturn="True" MinHeight="65" Text="http://127.0.0.1:5000"/>
+                <TextBlock Text="Отрисовка: один кадр в секунду." TextWrapping="Wrap"/>
+                <Grid ColumnDefinitions="*,140" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                      RowSpacing="5">
+                    <TextBlock Grid.Row="0" Text="Количество 1×1" VerticalAlignment="Center"/>
+                    <NumericUpDown Grid.Row="0" Grid.Column="1" Name="Count11" Minimum="0" Maximum="200" Value="8"/>
+                    <TextBlock Grid.Row="1" Text="Количество 1×2" VerticalAlignment="Center"/>
+                    <NumericUpDown Grid.Row="1" Grid.Column="1" Name="Count12" Minimum="0" Maximum="200" Value="0"/>
+                    <TextBlock Grid.Row="2" Text="Количество 2×1" VerticalAlignment="Center"/>
+                    <NumericUpDown Grid.Row="2" Grid.Column="1" Name="Count21" Minimum="0" Maximum="200" Value="0"/>
+                    <TextBlock Grid.Row="3" Text="Количество 2×2" VerticalAlignment="Center"/>
+                    <NumericUpDown Grid.Row="3" Grid.Column="1" Name="Count22" Minimum="0" Maximum="200" Value="5"/>
+                    <TextBlock Grid.Row="4" Text="Количество 1×3" VerticalAlignment="Center"/>
+                    <NumericUpDown Grid.Row="4" Grid.Column="1" Name="Count13" Minimum="0" Maximum="200" Value="0"/>
+                    <TextBlock Grid.Row="5" Text="Количество 3×1" VerticalAlignment="Center"/>
+                    <NumericUpDown Grid.Row="5" Grid.Column="1" Name="Count31" Minimum="0" Maximum="200" Value="0"/>
+                    <TextBlock Grid.Row="6" Text="Количество 3×3" VerticalAlignment="Center"/>
+                    <NumericUpDown Grid.Row="6" Grid.Column="1" Name="Count33" Minimum="0" Maximum="200" Value="3"/>
+                </Grid>
+                <TextBlock Text="Всего: от 1 до 200 фигур. Повороты запрещены." TextWrapping="Wrap"/>
+                <Grid ColumnDefinitions="*,140" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="5">
+                    <TextBlock Grid.Row="0" Text="Популяция" VerticalAlignment="Center"/>
+                    <NumericUpDown Grid.Row="0" Grid.Column="1" Name="PopulationBox" Minimum="2" Maximum="200" Value="40"/>
+                    <TextBlock Grid.Row="1" Text="Поколения" VerticalAlignment="Center"/>
+                    <NumericUpDown Grid.Row="1" Grid.Column="1" Name="GenerationsBox" Minimum="1" Maximum="2000" Value="20"/>
+                    <TextBlock Grid.Row="2" Text="Вероятность мутации" VerticalAlignment="Center"/>
+                    <NumericUpDown Grid.Row="2" Grid.Column="1" Name="MutationBox" Minimum="0" Maximum="1"
+                                   Increment="0.05" Value="0.25" FormatString="0.00"/>
+                    <TextBlock Grid.Row="3" Text="Seed (повторяемость)" VerticalAlignment="Center"/>
+                    <NumericUpDown Grid.Row="3" Grid.Column="1" Name="SeedBox" Minimum="0" Maximum="2147483647" Value="12345"/>
+                </Grid>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Name="StartButton" Content="Запустить" Click="Start_Click"/>
+                <Button Name="StopButton" Content="Остановить" Click="Stop_Click" IsEnabled="False"/>
+            </StackPanel>
+            <TextBlock Name="TimingText" TextWrapping="Wrap"/>
+        </StackPanel>
+        </ScrollViewer>
+        <Grid Grid.Column="1" RowDefinitions="*,180,Auto" RowSpacing="10">
+        <Border BorderBrush="Gray" BorderThickness="1" Background="White">
+            <Canvas Name="PackingCanvas" ClipToBounds="True" SizeChanged="Canvas_SizeChanged"/>
+        </Border>
+        <Canvas Grid.Row="1" Name="HistoryCanvas" Background="#F4F4F4" ClipToBounds="True" SizeChanged="History_SizeChanged"/>
+        <TextBlock Grid.Row="2" Text="График площади: красный — средняя площадь популяции, синий — лучший полученный результат. В распределённом режиме ось X показывает полученные кадры от всех сервисов." TextWrapping="Wrap"/>
+        </Grid>
+    </Grid>
+</Window>
